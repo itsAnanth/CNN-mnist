@@ -3,6 +3,7 @@ import torch.utils.data.dataloader
 import torchvision as tv
 import os 
 
+
 trainDir = tv.datasets.mnist.MNIST(
     root='./data',
     train=True,
@@ -53,10 +54,14 @@ class CNN(torch.nn.Module):
     
 model = CNN()
 current_dir = os.path.dirname(os.path.abspath(__file__))
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # Construct path to model file
 model_path = os.path.join(current_dir, 'model.pth')
 trainMode = not (os.path.isfile(model_path))
-print(model_path)
+
+
+model.to(device)
+train_loader
 
 def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader) -> None:
     criterion = torch.nn.CrossEntropyLoss()
@@ -65,6 +70,7 @@ def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader) -> 
     model.train()
     for epoch in range(5):
         for i, (images, labels) in enumerate(train_loader):
+            images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
             outputs = model(images)
             loss: torch.Tensor = criterion(outputs, labels)
